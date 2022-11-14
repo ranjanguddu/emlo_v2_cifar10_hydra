@@ -1,0 +1,24 @@
+# @package _global_
+defaults:
+  - override /datamodule: cifar10.yaml
+  - override /model: timm.yaml
+  - override /callbacks: default.yaml
+  - override /trainer: default.yaml
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+tags: ["cifar10"]
+
+seed: 12345
+
+trainer:
+  min_epochs: 10
+  max_epochs: 10
+  gradient_clip_val: 0.5
+
+model:
+  net:
+    model_name: resnet18
+    pretrained: True
+    num_classes: 10
