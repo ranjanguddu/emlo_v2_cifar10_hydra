@@ -1,0 +1,18 @@
+# @package _global_
+
+defaults:
+  - _self_
+  - datamodule: cifar10.yaml #mnist.yaml
+  - model: timm.yaml # very important
+  - callbacks: default.yaml
+  - logger: null
+  - trainer: default.yaml
+  - paths: default.yaml
+  - extras: default.yaml
+  - hydra: default.yaml
+  - experiment: cifar
+
+task_name: "demo"
+
+# checkpoint is necessary for demo
+ckpt_path: /workspace/emlo_v2_cifar10_hydra/logs/train/runs/2022-11-16_10-18-37/checkpoints/epoch_003.ckpt

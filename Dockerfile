@@ -19,4 +19,10 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt \
     && rm requirements.txt
 
-# COPY . .
+#ENTRYPOINT [ "python3","src/demo_scripted.py" ]
+
+COPY . .
+
+
+# /workspace/project/logs/train/runs/2022-11-18_12-20-35
+# /workspace/emlo_v2_cifar10_hydra/logs/train/runs/2022-11-18_12-20-35/model_script.pt
