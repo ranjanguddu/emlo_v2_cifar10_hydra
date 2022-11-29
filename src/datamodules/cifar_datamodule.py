@@ -12,7 +12,7 @@ class CIFAR10DataModule(LightningDataModule):
         data_dir: str = "./",
         train_val_test_split: Tuple[int, int, int] = (45_000, 5_000, 10_000),
         batch_size: int = 64,
-        num_workers: int = 8,
+        num_workers: int = 0,
         pin_memory: bool = False
         ):
         super().__init__()
@@ -24,16 +24,16 @@ class CIFAR10DataModule(LightningDataModule):
         
         self.transforms = transforms.Compose(
             [
-                #transforms.Resize(224),
+                
                 transforms.ToTensor(),
-                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+                transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
             ]
         )
         self.data_train: Optional[Dataset] = None
         self.data_val: Optional[Dataset] = None
         self.data_test: Optional[Dataset] = None
 
-        self.dims = (3, 32, 32)
+        #self.dims = (3, 32, 32)
         #self.num_classes = 10
 
     @property

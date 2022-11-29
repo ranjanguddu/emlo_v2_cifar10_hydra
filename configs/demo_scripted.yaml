@@ -8,4 +8,5 @@ defaults:
 task_name: "demo_traced"
 
 # checkpoint is necessary for demo
-ckpt_path: /workspace/emlo_v2_cifar10_hydra/logs/train/runs/2022-11-18_12-20-35/model_script.pt
+ckpt_path: ???
+#/workspace/emlo_v2_cifar10_hydra/logs/train/runs/2022-11-18_12-20-35/model_script.pt

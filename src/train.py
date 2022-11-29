@@ -77,9 +77,10 @@ def train(cfg: DictConfig) -> Tuple[dict, dict]:
     
     #scripted_model = model.to_torchscript(method="script")
     
-    scripted_model = torch.jit.script(model)
-    torch.jit.save(scripted_model, f"{cfg.paths.output_dir}/model_script.pt")
-    log.info(f'saving tarced model to {cfg.paths.output_dir}/model_script.pt')
+    scripted_model = model.to_torchscript(method="script")
+    torch.jit.save(scripted_model, f"{cfg.paths.output_dir}/model.script.pt")
+
+    log.info(f"Saving traced model to {cfg.paths.output_dir}/model.script.pt")
     
 
 

@@ -49,7 +49,7 @@ def demo(cfg: DictConfig) -> Tuple[dict, dict]:
 
     log.info(f"Loaded Model: {model}")
 
-    transforms = T.Compose([T.ToTensor(), T.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+    transforms = T.Compose([T.ToTensor(), T.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))])
 
     url, filename = (
     "https://raw.githubusercontent.com/pytorch/hub/master/imagenet_classes.txt",
@@ -71,10 +71,9 @@ def demo(cfg: DictConfig) -> Tuple[dict, dict]:
         config = resolve_data_config({}, model=model)
         transform = create_transform(**config)
 
-        img_tensor = transforms(inp_img).unsqueeze(0)  # transform and add batch dimension
+        img_tensor = transform(inp_img).unsqueeze(0)  # transform and add batch dimension
 
-        print(f'img_tensor: {img_tensor}')
-        print(f'img_tensor size: {img_tensor.shape}')
+        
 
         # inference
         with torch.no_grad():

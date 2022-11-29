@@ -18,6 +18,8 @@ import gradio as gr
 from omegaconf import DictConfig
 from typing import Dict
 
+from timm.data import resolve_data_config
+from timm.data.transforms_factory import create_transform
 from src import utils
 
 log = utils.get_pylogger(__name__)
@@ -37,8 +39,12 @@ def demo(cfg: DictConfig) -> Tuple[dict, dict]:
 
     log.info(f"Instantiating scripted model <{cfg.ckpt_path}>")
     model = torch.jit.load(cfg.ckpt_path)
+    model.eval()
+
+    
 
     log.info(f"Loaded Model: {model}")
+
 
     url, filename = (
     "https://raw.githubusercontent.com/pytorch/hub/master/imagenet_classes.txt",
@@ -49,43 +55,27 @@ def demo(cfg: DictConfig) -> Tuple[dict, dict]:
         categories = [s.strip() for s in f.readlines()]
 
 
-    def predict(image: Image) -> Dict[str, float]:
+    def recognize_image(image):
         if image is None:
             return None
-
-        # transform = transforms.Compose([transforms.Resize((224,224)), transforms.ToTensor()])
-        # img_tensor = transform(image).unsqueeze(0)
-        
-        # inference
-        with torch.no_grad():
-            
-            # img_tensor1= np.array((np.divide(image, 255)))
-            # img_tensor1 = torch.from_numpy(img_tensor1).float()
-            # #print(f'img_tensor1:{img_tensor1}, shape:{img_tensor1.shape}, type:{type(img_tensor1)}')
-            # img_tensor1 = img_tensor1.permute(2,0,1)
-            # image_tensor = torch.tensor(image, dtype=torch.float32)
-            # image_tensor = image_tensor.permute(2,0,1)
-
-            convert_tensor = transforms.ToTensor()
-            image_tensor = convert_tensor(image)
-
-            preds = model.forward_jit(image_tensor)
-            probabilities = preds[0].tolist()
-
-            confidences = {categories[i]: float(probabilities[i]) for i in range(10)}
+        image = torch.tensor(image[None, ...],dtype=torch.float32)
+        image = image.permute(0,3,1,2)
+        preds = model.forward_jit(image)
+        preds = preds[0].tolist()
+        confidences = {categories[i]: float(preds[i]) for i in range(10)}
 
         return confidences
 
-    # for CIFAR 
+    im = gr.Image(shape=(32, 32), image_mode="RGB")
+
     demo = gr.Interface(
-        fn=predict,
-        #inputs=gr.Image(source="webcam", streaming=True), #gr.Image(type="pil"),
-        inputs=gr.Image(type='pil'),
+        fn=recognize_image,
+        inputs=[im],
         outputs=[gr.Label(num_top_classes=10)],
-        #live=True
+        #live=True,
     )
 
-    demo.launch(share=True)
+    demo.launch()
 
 @hydra.main(
     version_base="1.2", config_path=root / "configs", config_name="demo_scripted.yaml"
