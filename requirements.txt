@@ -27,5 +27,5 @@ pytest          # tests
 
 
 # demo
-gradio==3.0
+gradio==3.17.0
 pytorch-lightning-bolts==0.3.2.post1
